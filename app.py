@@ -9,7 +9,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 cors = CORS(app)
 
-model = YOLO('epoch20.pt')
+model = YOLO('best (4).pt')
 
 @app.route('/test', methods=['GET'])
 def test():
@@ -25,19 +25,22 @@ def predict():
     if image_file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
-    if not image_file.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+    if not image_file.filename.lower().endswith(('.png', '.jpg', '.jpeg','.jfif')):
         return jsonify({"error": "Unsupported file type"}), 400
 
     try:
         image = Image.open(io.BytesIO(image_file.read()))
+        image = image.convert("RGB")  # تحويل الصورة إلى RGB
 
-        image = image.resize((640, 640))  
+        # تصغير الصورة مع الحفاظ على التناسب
+        max_size = (640, 640)
+        image.thumbnail(max_size, Image.LANCZOS)
 
-        results = model(image)
+        results = model.predict(image)
         predictions = []
 
         if not results:
-            return jsonify({"predictions": []}), 200
+            return jsonify({"predictions":[]}), 200
 
         for result in results[0].boxes:
             x_min, y_min, x_max, y_max = result.xyxy.tolist()[0]
@@ -46,11 +49,11 @@ def predict():
             class_name = model.names[class_id]
 
             predictions.append({
-                'x_min': x_min,
-                'y_min': y_min,
-                'x_max': x_max,
-                'y_max': y_max,
-                'class_name': class_name,
+                #'x_min': x_min,
+                #'y_min': y_min,
+                #'x_max': x_max,
+                #'y_max': y_max,
+                'Your money': class_name,
                 'confidence': confidence
             })
 
