@@ -53,7 +53,7 @@ def predict():
                 #'y_min': y_min,
                 #'x_max': x_max,
                 #'y_max': y_max,
-                '' class_name '',
+                '': class_name ,
                 'confidence': confidence
             })
 
