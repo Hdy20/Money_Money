@@ -40,7 +40,7 @@ def predict():
         predictions = []
 
         if not results:
-            return jsonify({"predictions":[]}), 200
+            return jsonify({[]}), 200
 
         for result in results[0].boxes:
             x_min, y_min, x_max, y_max = result.xyxy.tolist()[0]
@@ -53,7 +53,7 @@ def predict():
                 #'y_min': y_min,
                 #'x_max': x_max,
                 #'y_max': y_max,
-                'Your money': class_name,
+                '' class_name '',
                 'confidence': confidence
             })
 
